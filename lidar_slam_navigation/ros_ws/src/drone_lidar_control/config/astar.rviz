@@ -1,0 +1,75 @@
+Panels:
+- Class: rviz_common/Displays
+  Name: Displays
+Visualization Manager:
+  Class: ''
+  Global Options:
+    Fixed Frame: odom
+    Background Color: 48; 48; 48
+    Frame Rate: 30
+  Displays:
+  - Class: rviz_default_plugins/Map
+    Name: SLAM Map
+    Enabled: true
+    Alpha: 0.8
+    Color Scheme: map
+    Topic:
+      Value: /map
+      Reliability Policy: Reliable
+      Durability Policy: Transient Local
+      History Policy: Keep Last
+      Depth: 1
+    Value: true
+  - Class: rviz_default_plugins/LaserScan
+    Name: LiDAR
+    Enabled: true
+    Size (m): 0.03
+    Style: Points
+    Topic:
+      Value: /scan
+      Reliability Policy: Best Effort
+      Durability Policy: Volatile
+      History Policy: Keep Last
+      Depth: 5
+    Value: true
+  - Class: rviz_default_plugins/RobotModel
+    Name: Drone
+    Enabled: true
+    Description Source: Topic
+    Description Topic:
+      Value: /robot_description
+      Reliability Policy: Reliable
+      Durability Policy: Transient Local
+      History Policy: Keep Last
+      Depth: 1
+    Visual Enabled: true
+    Value: true
+  - Class: rviz_default_plugins/Path
+    Name: A* route
+    Enabled: true
+    Line Style: Lines
+    Line Width: 0.04
+    Color: 255; 80; 20
+    Topic:
+      Value: /astar/path
+      Reliability Policy: Reliable
+      Durability Policy: Transient Local
+      Depth: 1
+      History Policy: Keep Last
+    Value: true
+  Views:
+    Current:
+      Class: rviz_default_plugins/TopDownOrtho
+      Name: Map view
+      Target Frame: odom
+      Scale: 45
+      Angle: 0
+      X: 0
+      Y: 0
+  Tools:
+  - Class: rviz_default_plugins/Interact
+  - Class: rviz_default_plugins/MoveCamera
+  - Class: rviz_default_plugins/Measure
+Window Geometry:
+  Width: 1200
+  Height: 850

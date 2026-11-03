@@ -1,0 +1,49 @@
+# ROS 2 / colcon output
+build/
+install/
+log/
+.colcon/
+.ros/
+
+# Python caches, packaging and virtual environments
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Generated LiDAR maps
+/lidar_slam_navigation/ros_ws/src/drone_lidar_control/map/arena_*.npz
+/lidar_slam_navigation/ros_ws/src/drone_lidar_control/map/arena_*.pgm
+/lidar_slam_navigation/ros_ws/src/drone_lidar_control/map/arena_*.yaml
+
+# Generated RGB-D maps and RTAB-Map databases
+/vision_navigation/ros_ws/src/drone_vision_control/config/arena_*.npz
+/vision_navigation/ros_ws/src/drone_vision_control/config/arena_*.pgm
+/vision_navigation/ros_ws/src/drone_vision_control/config/arena_*.yaml
+/vision_navigation/ros_ws/src/drone_vision_control/config/arena_*.db*
+
+# ROS bag recordings
+*.bag
+*.mcap
+*.db3
+*.db3-shm
+*.db3-wal
+
+# Local credentials and environment files
+.aws/
+.env
+.env.*
+!.env.example
+
+# Editor backups and OS files
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db

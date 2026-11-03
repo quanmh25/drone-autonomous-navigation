@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="parrot_bebop">
+  <link name="base_link">
+    
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.503"/> 
+      <inertia ixx="0.001805" ixy="-0.0000008619" ixz="0.00001555" 
+               iyy="0.001764" iyz="0.0000003595" izz="0.003328"/>
+    </inertial>
+
+    <collision>
+      <origin xyz="-0.00424 0.00014 -0.00595" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.24 0.25 0.07"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drone_vision_description/models/my_drone/meshes/hull.dae" scale="0.75 0.75 0.75"/>
+      </geometry>
+    </visual>
+
+    <visual>
+      <origin xyz="-0.06776 -0.08567 -0.00376" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drone_vision_description/models/my_drone/meshes/propeller_rr.dae" scale="0.75 0.75 0.75"/>
+      </geometry>
+    </visual>
+
+    <visual>
+      <origin xyz="-0.06776 0.08589 -0.00376" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drone_vision_description/models/my_drone/meshes/propeller_rl.dae" scale="0.75 0.75 0.75"/>
+      </geometry>
+    </visual>
+
+    <visual>
+      <origin xyz="0.06342 -0.08576 -0.00376" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drone_vision_description/models/my_drone/meshes/propeller_fr.dae" scale="0.75 0.75 0.75"/>
+      </geometry>
+    </visual>
+
+    <visual>
+      <origin xyz="0.06342 0.08597 -0.00376" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://drone_vision_description/models/my_drone/meshes/propeller_fl.dae" scale="0.75 0.75 0.75"/>
+      </geometry>
+    </visual>
+  </link>
+
+
+  <link name="camera_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 1.5708 0"/>
+      <geometry><cylinder radius="0.008" length="0.01"/></geometry>
+      <material name="camera_black">
+        <color rgba="1.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+  </link>
+
+  <joint name="camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+    <origin xyz="0.0850 0.0 -0.0025 " rpy="0 0.3 0"/>
+  </joint>
+
+
+  <link name="front_rgbd_optical_frame"/>
+
+  <joint name="front_rgbd_optical_joint" type="fixed">
+    <parent link="camera_link"/>
+    <child link="front_rgbd_optical_frame"/>
+    <origin xyz="0 0 0" rpy="-1.57079632679 0 -1.57079632679"/>
+  </joint>
+
+  <gazebo reference="camera_link">
+    <sensor name="front_rgbd" type="rgbd_camera">
+      <always_on>true</always_on>
+      <update_rate>20</update_rate>
+      <visualize>true</visualize>
+      <topic>/front_rgbd</topic>
+      <camera>
+        <optical_frame_id>front_rgbd_optical_frame</optical_frame_id>
+        <horizontal_fov>1.396</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.15</near>
+          <far>10.0</far>
+        </clip>
+      </camera>
+    </sensor>
+  </gazebo>
+
+
+  <link name="right_camera_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 1.5708 0"/>
+      <geometry><cylinder radius="0.008" length="0.01"/></geometry>
+      <material name="camera_black"/>
+    </visual>
+  </link>
+
+  <joint name="right_camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_camera_link"/>
+    <origin xyz="0 -0.02 0" rpy="0 0 -1.57079632679"/>
+  </joint>
+
+  <!-- Optical axes: X right, Y down, Z forward. -->
+  <link name="right_rgbd_optical_frame"/>
+
+  <joint name="right_rgbd_optical_joint" type="fixed">
+    <parent link="right_camera_link"/>
+    <child link="right_rgbd_optical_frame"/>
+    <origin xyz="0 0 0" rpy="-1.57079632679 0 -1.57079632679"/>
+  </joint>
+
+  <!-- Side depth avoids repeated scan turns during right-wall following. -->
+  <gazebo reference="right_camera_link">
+    <sensor name="right_rgbd" type="rgbd_camera">
+      <always_on>true</always_on>
+      <update_rate>15</update_rate>
+      <topic>/right_rgbd</topic>
+      <camera>
+        <optical_frame_id>right_rgbd_optical_frame</optical_frame_id>
+        <horizontal_fov>1.0472</horizontal_fov>
+        <image><width>160</width><height>120</height><format>R8G8B8</format></image>
+        <clip><near>0.15</near><far>10.0</far></clip>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <gazebo>
+    <plugin filename="gz-sim-velocity-control-system" name="gz::sim::systems::VelocityControl">
+      <topic>/cmd_vel</topic>
+    </plugin>
+
+    <plugin filename="gz-sim-odometry-publisher-system"
+            name="gz::sim::systems::OdometryPublisher">
+        <odom_frame>odom</odom_frame>
+        <robot_base_frame>base_link</robot_base_frame>
+        <dimensions>3</dimensions>
+        <odom_topic>/odom</odom_topic>
+        <tf_topic>/odom_tf</tf_topic>
+        <odom_publish_frequency>30</odom_publish_frequency>
+    </plugin>
+
+  </gazebo>
+
+
+</robot>
